@@ -14,7 +14,11 @@
   "content_scripts": [
     {
       "matches": ["*://calendar.google.com/calendar*"],
-      "js": ["content.js"]
+      "js": [
+        "util.js",
+        "eval.js",
+        "main.js"
+      ]
     }
   ]
 
