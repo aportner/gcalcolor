@@ -24,7 +24,7 @@ const colorizeAll = () => {
 
 let timeoutId = null;
 let observerDelay = 250;
-setTimeout(() => { observerDelay = 500; }, 5000);
+setTimeout(() => { observerDelay = 200; }, 5000);
 
 let observer = new MutationObserver(observerCallback);
 observer.observe(

@@ -1,8 +1,6 @@
-const HIDE_COLORS = [
-    'rgb(246, 191, 38)',
-    'rgb(167, 155, 142)',
-];
 const MY_NAME = 'Andrew';
+
+const CHINA_EMOJI = '🇨🇳';
 const NAME_REGEXES = [
   new RegExp('^' + MY_NAME + ' / (\\w+)'),
   new RegExp('(\\w+) / ' + MY_NAME),
@@ -15,10 +13,9 @@ function colorizeEvent(event) {
     const computedStyle = getComputedStyle(event);
     const style = event.style;
     const backgroundColor = style.backgroundColor;
-    const borderColor = style.borderColor;
 
-    if (HIDE_COLORS.indexOf(borderColor) !== -1
-        || computedStyle.background.indexOf('linear-gradient') !== -1
+    // hide 'maybe' and declined events
+    if (computedStyle.background.indexOf('linear-gradient') !== -1
         || backgroundColor === ''
         && childMatch(
             event,
@@ -31,8 +28,22 @@ function colorizeEvent(event) {
             }
         )
     ) {
-        event.style.opacity = 0.5;
-        event.style.zIndex = 0;
+        const OPACITY = 0.3;
+
+        if (event.style.opacity === '') {
+            event.style.opacity = OPACITY;
+            event.style.zIndex = 0;
+        }
+
+        event.onmouseenter = () => {
+            event.style.opacity = 0.7;
+            event.style.zIndex = 5;
+        }
+
+        event.onmouseleave = () => {
+            event.style.opacity = OPACITY;
+            event.style.zIndex = 0;
+        }
     }
 
     const oneOnOne = childTextMatch(event, NAME_REGEXES);
@@ -45,7 +56,10 @@ function colorizeEvent(event) {
 
     const phoneScreen = childTextMatch(
         event,
-        /Hiring Manager Phone Screen - (.*)/,
+        [
+            /Hiring Manager Phone Screen - (.*)/,
+            /Call (.*)/,
+        ],
     );
     if (phoneScreen) {
         const span = phoneScreen[0];
@@ -56,12 +70,21 @@ function colorizeEvent(event) {
 
     const interview = childTextMatch(
         event,
-        /Onsite Interview - (.*)/,
+        /On.?site Interview - (.*)/,
     );
     if (interview) {
         const span = interview[0];
         const name = interview[2][1];
 
         span.innerText = `🎙 ${name}`;
+    }
+
+    const china = childTextMatch(event, /China/i);
+    if (china) {
+        const span = china[0];
+        
+        if (span.innerText.substr(0, CHINA_EMOJI.length) !== CHINA_EMOJI) {
+            span.innerText = CHINA_EMOJI + ' ' + span.innerText;
+        }
     }
 }
