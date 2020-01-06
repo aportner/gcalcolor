@@ -1,6 +1,16 @@
-// Content script for the extension. Does all the work.
-
 "use strict";
+
+var MY_NAME = '';
+
+chrome.storage.sync.get(
+  {
+      name: '',
+  },
+  settings => {
+      MY_NAME = settings.name;
+  },
+);
+
 
 const observerCallback = (mutationList) => {
   if (timeoutId) {

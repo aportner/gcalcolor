@@ -1,13 +1,4 @@
-const MY_NAME = 'Andrew';
-
 const CHINA_EMOJI = '🇨🇳';
-const NAME_REGEXES = [
-  new RegExp('^' + MY_NAME + ' / (\\w+)'),
-  new RegExp('(\\w+) / ' + MY_NAME),
-  new RegExp('^' + MY_NAME + ',\\s?(\\w+)$'),
-  new RegExp('^' + MY_NAME + ' <1:1> (\\w+)'),
-  new RegExp('^(\\w+):' + MY_NAME)
-];
 
 function colorizeEvent(event) {
     const computedStyle = getComputedStyle(event);
@@ -46,7 +37,15 @@ function colorizeEvent(event) {
         }
     }
 
-    const oneOnOne = childTextMatch(event, NAME_REGEXES);
+    const nameRegexes = [
+        new RegExp('^' + MY_NAME + ' / (\\w+)'),
+        new RegExp('(\\w+) / ' + MY_NAME),
+        new RegExp('^' + MY_NAME + ',\\s?(\\w+)$'),
+        new RegExp('^' + MY_NAME + ' <1:1> (\\w+)'),
+        new RegExp('^(\\w+):' + MY_NAME)
+    ];
+
+    const oneOnOne = childTextMatch(event, nameRegexes);
     if (oneOnOne) {
         const span = oneOnOne[0];
         const name = oneOnOne[2][1];
